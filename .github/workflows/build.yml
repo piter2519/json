@@ -1,0 +1,30 @@
+name: Build JSON Library
+
+on:
+  push:
+    branches:
+      - devops
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pobranie kodu
+        uses: actions/checkout@v4
+
+      - name: Instalacja CMake i G++
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++
+
+      - name: Budowanie projektu
+        run: |
+          cmake -S . -B build -DJSON_BuildTests=On
+          cmake --build build
+
+      - name: Zapisanie zbudowanych plików jako artefakt
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-build-artifact
+          path: build/
